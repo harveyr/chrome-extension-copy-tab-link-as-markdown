@@ -3,21 +3,37 @@ chrome.action.onClicked.addListener((tab) => {
     target: { tabId: tab.id },
     files: ['content.js'],
   })
+
+  sendTabData().catch((err) => {
+    console.error(err)
+  })
 })
 
-// chrome.browserAction.onClicked.addListener(function () {
-//   alert('hi')
-// })
+async function sendTabData() {
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    lastFocusedWindow: true,
+  })
+  const { title, url } = tab
+  const dat = {
+    tab: {
+      url,
+      title,
+    },
+  }
 
-// function getLink() {
-//   //   chrome.tabs.getSelected(null, (tab) => {
-//   //     // null defaults to current window
-//   //     var title = tab.title
-//   //     // ...
-//   //     alert(title)
-//   //   })
-//   chrome.tabs.query({ active: true, currentWindow: true }, (tab)  =>{
-//     // do some other fanciful stuff here
-//     alert(tab.title)
-//   })
-// }
+  console.log('Sending', dat)
+
+  // https://developer.chrome.com/docs/extensions/mv3/messaging/
+  const response = await chrome.tabs.sendMessage(tab.id, dat)
+  // do something with response here, not outside the function
+  console.log('response', response)
+  chrome.notifications.create('', {
+    title: 'Copied',
+    message: 'Tab link copied to clipboard',
+    iconUrl: '/icon.png',
+    type: 'basic',
+    silent: true,
+    requireInteraction: false,
+  })
+}

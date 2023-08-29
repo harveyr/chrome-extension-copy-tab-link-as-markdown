@@ -3,16 +3,16 @@
   "version": "1.0",
   "description": "A simple extension that copies the title and URL of the current tab as a Markdown link.",
   "manifest_version": 3,
-//   "content_scripts": [
-//     {
-//       "matches": ["*://*/*"],
-//       "js": ["index.js"]
-//     }
-//   ],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content.js"]
+    }
+  ],
   "action": {
     "default_title": "Copy as Markdown"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "notifications"],
   "background": {
     "service_worker": "background.js"
   }
