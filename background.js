@@ -28,9 +28,16 @@ async function sendTabData() {
   const response = await chrome.tabs.sendMessage(tab.id, dat)
   // do something with response here, not outside the function
   console.log('response', response)
+
+  sendNotification('Tab link copied to clipboard')
+}
+
+function sendNotification(message) {
+  const title = 'Copy as Markdown'
+
   chrome.notifications.create('', {
-    title: 'Copied',
-    message: 'Tab link copied to clipboard',
+    title,
+    message,
     iconUrl: '/icon.png',
     type: 'basic',
     silent: true,
